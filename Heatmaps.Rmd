@@ -1,0 +1,115 @@
+---
+title: "Heatmaps"
+output: pdf_document
+date: "2025-04-27"
+---
+
+```{r}
+library(car)  
+library(ggplot2) 
+
+data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+```
+
+```{r}
+
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+install.packages("sf")  
+install.packages("ggplot2")
+
+library(ggplot2)
+library(dplyr)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# Load world map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Prepare your dataset (merge your data to world map by country name)
+world_data <- world %>%
+  left_join(data, by = c("name" = "Country"))
+
+# Plot Life Expectancy
+ggplot(data = world_data) +
+  geom_sf(aes(fill = Life_expectancy)) +
+  scale_fill_viridis_c(option = "plasma", na.value = "lightgrey") +
+  labs(title = "Life Expectancy by Country",
+       fill = "Life Expectancy") +
+  theme_minimal()
+```
+
+```{r}
+install.packages("rworldmap")
+library(rworldmap)
+
+# Join your data to the world map
+joinedData <- joinCountryData2Map(data, joinCode = "NAME", nameJoinColumn = "Country")
+
+# Easy Map 1: Life Expectancy
+mapCountryData(joinedData, 
+               nameColumnToPlot = "Life_expectancy", 
+               colourPalette = "heat", 
+               mapTitle = "Life Expectancy by Country")
+
+# Easy Map 2: GDP per Capita
+mapCountryData(joinedData, 
+               nameColumnToPlot = "GDP_per_capita", 
+               colourPalette = "heat", 
+               mapTitle = "GDP per Capita by Country")
+
+# Easy Map 3: Adult Mortality
+mapCountryData(joinedData, 
+               nameColumnToPlot = "Adult_mortality", 
+               colourPalette = "heat", 
+               mapTitle = "Adult Mortality by Country")
+
+```
+
+
+```{r}
+# install.packages("rnaturalearth")
+# install.packages("rnaturalearthdata")
+# install.packages("sf")
+# install.packages("scales")
+
+library(scales)
+library(ggplot2)
+library(dplyr)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+
+# Load base world map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge your data with world map (by Country name)
+world_data <- world %>%
+  left_join(data, by = c("name" = "Country"))
+
+# Pretty Map 1: Life Expectancy
+ggplot(world_data) +
+  geom_sf(aes(fill = Life_expectancy)) +
+  scale_fill_viridis_c(option = "plasma", na.value = "lightgrey") +
+  labs(title = "Life Expectancy by Country",
+       fill = "Life Expectancy") +
+  theme_minimal()
+
+# Pretty Map 2: GDP per Capita
+ggplot(world_data) +
+  geom_sf(aes(fill = GDP_per_capita)) +
+  scale_fill_viridis_c(option = "cividis", na.value = "lightgrey") +
+  labs(title = "GDP per Capita by Country",
+       fill = "GDP per Capita") +
+  theme_minimal()
+
+# Pretty Map 3: Adult Mortality
+ggplot(world_data) +
+  geom_sf(aes(fill = Adult_mortality)) +
+  scale_fill_viridis_c(option = "magma", na.value = "lightgrey") +
+  labs(title = "Adult Mortality by Country",
+       fill = "Adult Mortality") +
+  theme_minimal()
+
+
+```
