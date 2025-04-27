@@ -1,0 +1,172 @@
+---
+title: "Untitled"
+output: pdf_document
+date: "2025-04-27"
+---
+
+```{r}
+library(car)  
+library(ggplot2) 
+
+data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+```
+
+## Group A: Diseases
+```{r}
+# Variables in Group A
+groupA_vars <- c("Hepatitis_B", "Measles", "Polio", "Diphtheria", "Incidents_HIV")
+
+# Simple regressions
+cat("Simple Regressions for Group A (Diseases):\n")
+for (var in groupA_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group A
+model_groupA <- lm(Life_expectancy ~ Hepatitis_B + Measles + Polio + Diphtheria + Incidents_HIV, data = data)
+cat("\nMultiple Regression for Group A (Diseases):\n")
+summary(model_groupA)
+
+# VIF check
+cat("\nVIF for Group A:\n")
+vif(model_groupA)
+
+```
+```{r}
+# Scatterplots stratified by Region for Group A
+cat("\nScatterplots by Region for Group A:\n")
+for (var in groupA_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+```
+
+## Group B: Economic Factors
+
+```{r}
+# Group B: Economic Factors
+groupB_vars <- c("GDP_per_capita", "Economy_status_Developed")  # <-- dropped Economy_status_Developing
+
+cat("\nSimple Regressions for Group B (Economic Factors):\n")
+for (var in groupB_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+model_groupB <- lm(Life_expectancy ~ GDP_per_capita + Economy_status_Developed, data = data)
+cat("\nMultiple Regression for Group B (Economic Factors):\n")
+summary(model_groupB)
+
+cat("\nVIF for Group B:\n")
+vif(model_groupB)
+
+```
+
+
+```{r}
+# Scatterplots stratified by Region for Group B
+cat("\nScatterplots by Region for Group B:\n")
+for (var in groupB_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+
+```
+
+
+## Group C: Death Demographics
+
+```{r}
+# Variables in Group C
+groupC_vars <- c("Adult_mortality", "Infant_deaths", "Under_five_deaths")
+
+# Simple regressions
+cat("\nSimple Regressions for Group C (Death Demographic Factors):\n")
+for (var in groupC_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group C
+model_groupC <- lm(Life_expectancy ~ Adult_mortality + Infant_deaths + Under_five_deaths, data = data)
+cat("\nMultiple Regression for Group C (Death Demographic Factors):\n")
+summary(model_groupC)
+
+# VIF check
+cat("\nVIF for Group C:\n")
+vif(model_groupC)
+
+```
+
+
+```{r}
+# Scatterplots stratified by Region for Group C
+cat("\nScatterplots by Region for Group C:\n")
+for (var in groupC_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+
+```
+
+## Group D: Nutrition and Physical Status
+```{r}
+# Variables in Group D
+groupD_vars <- c("BMI", "Thinness_ten_nineteen_years", "Thinness_five_nine_years", "Alcohol_consumption")
+
+# Simple regressions
+cat("\nSimple Regressions for Group D (Nutrition and Physical Status):\n")
+for (var in groupD_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group D
+model_groupD <- lm(Life_expectancy ~ BMI + Thinness_ten_nineteen_years + Thinness_five_nine_years + Alcohol_consumption, data = data)
+cat("\nMultiple Regression for Group D (Nutrition and Physical Status):\n")
+summary(model_groupD)
+
+# VIF check
+cat("\nVIF for Group D:\n")
+vif(model_groupD)
+
+```
+```{r}
+# Scatterplots stratified by Region for Group D
+cat("\nScatterplots by Region for Group D:\n")
+for (var in groupD_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+```
+
+
