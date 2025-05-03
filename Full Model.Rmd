@@ -511,7 +511,7 @@ summary(new_model3)
 vif(new_model3)
 
 ```
-When dropping Diphtheria, Hepatitis-B becomes in significant, so we will drop Polio instead, so we will go with new_model2 as our reduced model.
+When dropping Diphtheria, Hepatitis-B becomes in significant, so we will drop Polio instead, so we will go with new_model2 as our reduced model. It has an adjusted R-squared 0f 0.83 which is much more preferable to the previous 0.97, it indicated that these values have a strong relation to Life_expectancy without over fitting the model.
 
 # New Residual Analysis
 
@@ -534,6 +534,8 @@ hist(studres(new_model2), breaks = 10, freq = F, col="cornflowerblue",
 
 cooks_d <- cooks.distance(new_model2)
 plot(cooks_d)
+
+# remove influential points flagged by cook's distance
 
 n <- nrow(data)
 
@@ -560,4 +562,175 @@ summary(cleaned_new_model2)
 
 cleaned_cooks_d <- cooks.distance(cleaned_new_model2)
 plot(cleaned_cooks_d)
+
+library(car)
+library(MASS)
+
+# residuals vs fitted values
+plot(fitted(cleaned_new_model2), studres(cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+```
+
+# New Transformations
+
+```{r}
+
+# log transformation
+
+log_cleaned_new_model2 <- lm(log(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(log_cleaned_new_model2)
+
+
+# residuals vs fitted values
+plot(fitted(log_cleaned_new_model2), studres(log_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(log_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(log_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# square root transformation
+
+sqrt_cleaned_new_model2 <- lm(sqrt(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(log_cleaned_new_model2)
+
+
+# residuals vs fitted values
+plot(fitted(sqrt_cleaned_new_model2), studres(sqrt_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(sqrt_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(sqrt_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# box-cox transformation
+
+boxcox_result <- boxcox(cleaned_new_model2)
+lambda <- boxcox_result$x[which.max(boxcox_result$y)]
+
+boxcox1_cleaned_new_model2 <- lm((Life_expectancy ^ lambda)  ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(boxcox1_cleaned_new_model2)
+
+# residuals vs fitted values
+plot(fitted(boxcox1_cleaned_new_model2), studres(boxcox1_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(boxcox1_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(boxcox1_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+boxcox2_cleaned_new_model2 <- lm((((Life_expectancy ^ lambda) - 1) / 2)   ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(boxcox2_cleaned_new_model2)
+
+# residuals vs fitted values
+plot(fitted(boxcox2_cleaned_new_model2), studres(boxcox2_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(boxcox2_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(boxcox2_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+```
+
+Now that we have transformed variables, we will compare their AIC values to determine which is best.
+
+```{r}
+
+AIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
+BIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
+
+```
+
+The log transformation has the lowest AIC and BIC values, indicating that it is the best model out of the original and these transformations. The tails of the QQ plot are not as good as the original mode but we think this is a valid trade off for the better AIC/BIC values.
+
+```{r}
+
+
+
 ```
