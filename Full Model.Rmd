@@ -480,7 +480,7 @@ new_model2 <- lm(Life_expectancy ~
               Diphtheria +
               Incidents_HIV +
               GDP_per_capita +
-              Population_mln ++
+              Population_mln +
               Thinness_five_nine_years +
               Schooling +
               Economy_status_Developed,
@@ -725,12 +725,165 @@ Now that we have transformed variables, we will compare their AIC values to dete
 AIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
 BIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
 
+
+
 ```
 
 The log transformation has the lowest AIC and BIC values, indicating that it is the best model out of the original and these transformations. The tails of the QQ plot are not as good as the original mode but we think this is a valid trade off for the better AIC/BIC values.
 
+# Final look at models
+
 ```{r}
+log_model6 <- lm(log(Life_expectancy) ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+sqrt_model6 <- lm(sqrt(Life_expectancy) ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+squared_model6 <- lm((Life_expectancy) ^ 2 ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+log_new_model2 <- lm(log(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+sqrt_new_model2 <- lm(sqrt(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+squared_new_model2 <- lm((Life_expectancy) ^ 2 ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+AIC(model6, log_model6, sqrt_model6, squared_model6, new_model2, log_new_model2, sqrt_new_model2, squared_new_model2)
+
+BIC(model6, log_model6, sqrt_model6, squared_model6, new_model2, log_new_model2, sqrt_new_model2, squared_new_model2)
+
+# residuals vs fitted values
+plot(fitted(model6), studres(model6),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(model6)
+
+# histogram of residuals
+hist(studres(model6), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# Residuals vs Fitted Values (Log Original Model)
+plot(fitted(log_model6), studres(log_model6),
+     main = "Residuals vs Fitted (Log Original Model)",
+     xlab = "Fitted Values", ylab = "Studentized Residuals (Log Model)")
+abline(h = 0, col = "red")
+
+# QQ Plot (Log Original Model)
+qqPlot(log_model6, 
+       main = "QQ Plot of Residuals (Log Original Model)")
+
+# Histogram of Residuals (Log Original Model)
+hist(studres(log_model6), breaks = 10, freq = FALSE, col = "cornflowerblue",
+     xlab = "Studentized Residuals", 
+     main = "Histogram of Residuals (Log Original Model)")
 
 
 
+# residuals vs fitted values
+plot(fitted(new_model2), studres(new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(new_model2)
+
+# histogram of residuals
+hist(studres(new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# Residuals vs Fitted Values Plot
+plot(fitted(log_new_model2), studres(log_new_model2),
+     main = "Residuals vs Fitted (Log Adjusted Model)",
+     xlab = "Fitted Values", ylab = "Studentized Residuals (Log Model)")
+abline(h = 0, col = "red")
+
+# QQ Plot
+qqPlot(log_new_model2, 
+       main = "QQ Plot of Residuals (Log Adjusted Model)")
+
+# Histogram of Residuals
+hist(studres(log_new_model2), breaks = 10, freq = FALSE, col = "cornflowerblue",
+     xlab = "Studentized Residuals", 
+     main = "Histogram of Residuals (Log Adjusted Model)")
+
+
+summary(log_model6)
+summary(log_new_model2)
 ```
