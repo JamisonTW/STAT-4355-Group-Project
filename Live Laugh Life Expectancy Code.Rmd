@@ -1,0 +1,1397 @@
+---
+title: "Live Laugh Life Expectancy Code"
+author: "Live Laugh Life Expectancy"
+date: "2025-05-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Exploratory Data Analysis
+
+```{r}
+library(car)  
+library(ggplot2) 
+
+data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+```
+
+## Group A: Diseases
+```{r}
+# Variables in Group A
+groupA_vars <- c("Hepatitis_B", "Measles", "Polio", "Diphtheria", "Incidents_HIV")
+
+# Simple regressions
+cat("Simple Regressions for Group A (Diseases):\n")
+for (var in groupA_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group A
+model_groupA <- lm(Life_expectancy ~ Hepatitis_B + Measles + Polio + Diphtheria + Incidents_HIV, data = data)
+cat("\nMultiple Regression for Group A (Diseases):\n")
+summary(model_groupA)
+
+# VIF check
+cat("\nVIF for Group A:\n")
+vif(model_groupA)
+
+```
+```{r}
+# Scatterplots stratified by Region for Group A
+cat("\nScatterplots by Region for Group A:\n")
+for (var in groupA_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+```
+
+## Group B: Economic Factors
+
+```{r}
+# Group B: Economic Factors
+groupB_vars <- c("GDP_per_capita", "Economy_status_Developed")  # <-- dropped Economy_status_Developing
+
+cat("\nSimple Regressions for Group B (Economic Factors):\n")
+for (var in groupB_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+model_groupB <- lm(Life_expectancy ~ GDP_per_capita + Economy_status_Developed, data = data)
+cat("\nMultiple Regression for Group B (Economic Factors):\n")
+summary(model_groupB)
+
+cat("\nVIF for Group B:\n")
+vif(model_groupB)
+
+```
+
+
+```{r}
+# Scatterplots stratified by Region for Group B
+cat("\nScatterplots by Region for Group B:\n")
+for (var in groupB_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+
+```
+
+
+## Group C: Death Demographics
+
+```{r}
+# Variables in Group C
+groupC_vars <- c("Adult_mortality", "Infant_deaths", "Under_five_deaths")
+
+# Simple regressions
+cat("\nSimple Regressions for Group C (Death Demographic Factors):\n")
+for (var in groupC_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group C
+model_groupC <- lm(Life_expectancy ~ Adult_mortality + Infant_deaths + Under_five_deaths, data = data)
+cat("\nMultiple Regression for Group C (Death Demographic Factors):\n")
+summary(model_groupC)
+
+# VIF check
+cat("\nVIF for Group C:\n")
+vif(model_groupC)
+
+```
+
+
+```{r}
+# Scatterplots stratified by Region for Group C
+cat("\nScatterplots by Region for Group C:\n")
+for (var in groupC_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+
+```
+
+## Group D: Nutrition and Physical Status
+```{r}
+# Variables in Group D
+groupD_vars <- c("BMI", "Thinness_ten_nineteen_years", "Thinness_five_nine_years", "Alcohol_consumption")
+
+# Simple regressions
+cat("\nSimple Regressions for Group D (Nutrition and Physical Status):\n")
+for (var in groupD_vars) {
+  cat("\nSimple Regression: Life_expectancy ~", var, "\n")
+  model <- lm(as.formula(paste("Life_expectancy ~", var)), data = data)
+  print(summary(model))
+}
+
+# Multiple regression for Group D
+model_groupD <- lm(Life_expectancy ~ BMI + Thinness_ten_nineteen_years + Thinness_five_nine_years + Alcohol_consumption, data = data)
+cat("\nMultiple Regression for Group D (Nutrition and Physical Status):\n")
+summary(model_groupD)
+
+# VIF check
+cat("\nVIF for Group D:\n")
+vif(model_groupD)
+
+```
+```{r}
+# Scatterplots stratified by Region for Group D
+cat("\nScatterplots by Region for Group D:\n")
+for (var in groupD_vars) {
+  p <- ggplot(data, aes_string(x = var, y = "Life_expectancy", color = "Region")) +
+    geom_point(alpha = 0.7) +
+    geom_smooth(method = "lm", se = FALSE, color = "black") +
+    labs(title = paste("Life Expectancy vs", var, "by Region"),
+         x = var,
+         y = "Life Expectancy") +
+    theme_minimal()
+  print(p)
+}
+```
+# Simple Linear Regressions
+```{r}
+data <- read_csv("Life-Expectancy-Data-Updated_csv")
+
+data1 <- data %>% select(-Country, -Year, -Region)
+library(dplyr)
+library(ggplot2)
+
+model1 <- lm(Life_expectancy ~., data = data1)
+summary(model1)
+
+
+# 1. Infant_deaths
+model1 <- lm(Life_expectancy ~ Infant_deaths, data = data)
+summary(model1)
+ggplot(data, aes(x = Infant_deaths, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Infant Deaths")
+
+# 2. Under_five_deaths
+model2 <- lm(Life_expectancy ~ Under_five_deaths, data = data)
+summary(model2)
+ggplot(data, aes(x = Under_five_deaths, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Under Five Deaths")
+
+# 3. Adult_mortality
+model3 <- lm(Life_expectancy ~ Adult_mortality, data = data)
+summary(model3)
+ggplot(data, aes(x = Adult_mortality, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Adult Mortality")
+
+# 4. Alcohol_consumption
+model4 <- lm(Life_expectancy ~ Alcohol_consumption, data = data)
+summary(model4)
+ggplot(data, aes(x = Alcohol_consumption, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Alcohol Consumption")
+
+# 5. Hepatitis_B
+model5 <- lm(Life_expectancy ~ Hepatitis_B, data = data)
+summary(model5)
+ggplot(data, aes(x = Hepatitis_B, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Hepatitis B")
+
+# 6. Measles
+model6 <- lm(Life_expectancy ~ Measles, data = data)
+summary(model6)
+ggplot(data, aes(x = Measles, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Measles")
+
+# 7. BMI
+model7 <- lm(Life_expectancy ~ BMI, data = data)
+summary(model7)
+ggplot(data, aes(x = BMI, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs BMI")
+
+# 8. Polio
+model8 <- lm(Life_expectancy ~ Polio, data = data)
+summary(model8)
+ggplot(data, aes(x = Polio, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Polio")
+
+# 9. Diphtheria
+model9 <- lm(Life_expectancy ~ Diphtheria, data = data)
+summary(model9)
+ggplot(data, aes(x = Diphtheria, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Diphtheria")
+
+# 10. Incidents_HIV
+model10 <- lm(Life_expectancy ~ Incidents_HIV, data = data)
+summary(model10)
+ggplot(data, aes(x = Incidents_HIV, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs HIV Incidents")
+
+# 11. GDP_per_capita
+model11 <- lm(Life_expectancy ~ GDP_per_capita, data = data)
+summary(model11)
+ggplot(data, aes(x = GDP_per_capita, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs GDP per Capita")
+
+# 12. Population_mln
+model12 <- lm(Life_expectancy ~ Population_mln, data = data)
+summary(model12)
+ggplot(data, aes(x = Population_mln, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Population (Millions)")
+
+# 13. Thinness_ten_nineteen_years
+model13 <- lm(Life_expectancy ~ Thinness_ten_nineteen_years, data = data)
+summary(model13)
+ggplot(data, aes(x = Thinness_ten_nineteen_years, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Thinness (10-19 Years)")
+
+# 14. Thinness_five_nine_years
+model14 <- lm(Life_expectancy ~ Thinness_five_nine_years, data = data)
+summary(model14)
+ggplot(data, aes(x = Thinness_five_nine_years, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Thinness (5-9 Years)")
+
+# 15. Schooling
+model15 <- lm(Life_expectancy ~ Schooling, data = data)
+summary(model15)
+ggplot(data, aes(x = Schooling, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Schooling")
+
+# 16. Economy_status_Developed
+model16 <- lm(Life_expectancy ~ Economy_status_Developed, data = data)
+summary(model16)
+ggplot(data, aes(x = Economy_status_Developed, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Developed Status")
+
+# 17. Economy_status_Developing
+model17 <- lm(Life_expectancy ~ Economy_status_Developing, data = data)
+summary(model17)
+ggplot(data, aes(x = Economy_status_Developing, y = Life_expectancy)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Life Expectancy vs Developing Status")
+
+```
+# Model Groups and Residual Analysis
+```{r}
+lifeexp <- read.csv("Life-Expectancy-Data-Updated.csv")
+library(ggplot2)
+library(MASS)
+```
+
+## Group A
+
+```{r}
+fit_a <- lm(Life_expectancy ~ Hepatitis_B + Measles + Polio + Diphtheria + Incidents_HIV, data = lifeexp)
+
+par(mfrow = c(1,2))
+
+#standardized plot
+plot(fitted(fit_a), stdres(fit_a),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group A (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+#log? <- looks more clustered
+log_stdres_a <- log(stdres(fit_a))
+plot(fitted(fit_a), log_stdres_a,
+     ylab = "Log of Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group A - Log (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+par(mfrow = c(1,1))
+
+```
+
+
+## Group B
+
+```{r}
+# original
+fit_b <- lm(Life_expectancy ~ GDP_per_capita + Economy_status_Developed + Economy_status_Developing, data = lifeexp)
+
+par(mfrow = c(2,2))
+
+# standardized plot
+plot(fitted(fit_b), stdres(fit_b),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group B (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+#log?
+log_stdres <- log(stdres(fit_b))
+plot(fitted(fit_b), log_stdres,
+     ylab = "Log of Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group B - Log (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+#sqrt?
+fit_b_transformed <- lm(sqrt(Life_expectancy) ~ GDP_per_capita, data = lifeexp)
+plot(fitted(fit_b_transformed), stdres(fit_b_transformed),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group B - Square Root (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+#poly? <- looks better
+fit_b_poly <- lm(Life_expectancy ~ GDP_per_capita + I(GDP_per_capita^2) + Economy_status_Developed + Economy_status_Developing, data = lifeexp)
+
+plot(fitted(fit_b_poly), stdres(fit_b_poly),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group B - Squared (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+par(mfrow = c(1,1))
+
+```
+
+
+## Group C
+
+```{r}
+fit_c <- lm(Life_expectancy ~ Adult_mortality + Infant_deaths + Under_five_deaths, data = lifeexp)
+
+# standardized plot
+plot(fitted(fit_c), stdres(fit_c),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group C (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+```
+
+
+## Group D
+
+```{r}
+fit_d <- lm(Life_expectancy ~ BMI + Thinness_five_nine_years + Thinness_ten_nineteen_years + Alcohol_consumption, data = lifeexp)
+
+#stdres and plot
+plot(fitted(fit_d), stdres(fit_d),
+     ylab = "Standardized Residuals",
+     xlab = "Fitted Values",
+     main = "Group D (Residuals vs Fitted)")
+abline(h = 0, col = "red")
+
+```
+
+# Further Look at Groups
+```{r}
+
+library(tidyverse)
+data <- read_csv("data/data.csv")
+
+data_cols <- data %>% 
+  colnames()
+
+data_cols
+
+
+# pair-wise scatter plot 
+plot_wRegion <- data %>%
+  # Reshape to long format for faceting
+  pivot_longer(cols = -c(Country, Year, Region, Life_expectancy, Economy_status_Developed, Economy_status_Developing),
+               names_to = "predictor",
+               values_to = "value") %>%
+  # Plot
+  ggplot(aes(x = value, y = Life_expectancy, color = Region)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(fill=NA, method="glm") +
+  facet_wrap( ~ predictor, scales = "free") + 
+  # Or facet_grid(. ~ predictor)
+  labs(x = "Predictor Value", y = "Response") +
+  theme(plot.title = element_text(size = rel(2))) +
+  scale_fill_viridis_d() +
+  theme_minimal()
+
+  
+# export plot:
+ggsave(filename = 
+         "./explore/scatterplot_with_regions.png",
+       plot = plot_wRegion,
+       width = 40,
+       height = 30,
+       units = "cm",
+       dpi=1200)
+
+# checking baseline model: baseline region is first level
+data$Region <- factor(data$Region)
+levels(data$Region) # Africa is the baseline region
+
+lm_model <-  lm(Life_expectancy ~ Region + 
+                  Hepatitis_B * Region +
+                Measles * Region +
+                Polio * Region +
+                Diphtheria * Region + 
+                Incidents_HIV * Region + 
+                GDP_per_capita * Region +
+                Adult_mortality * Region + 
+                Infant_deaths * Region +
+                Under_five_deaths * Region + 
+                BMI * Region +
+                Thinness_ten_nineteen_years * Region +
+                Thinness_five_nine_years * Region +
+                Alcohol_consumption * Region, data = data)
+summary(lm_model)
+
+
+lm_model <- lm(Life_expectancy ~ Region + Alcohol_consumption*Region + BMI*Region + GDP_per_capita*Region, data = data)
+summary(lm_model)
+
+
+# Look at the model by groups:
+# Define each group with Region interactions
+lm_grouped <- lm(
+  Life_expectancy ~ 
+    # Group A: Disease Incidence * Region
+    (Hepatitis_B + Measles + Polio + Diphtheria + Incidents_HIV) * Region +
+    
+    # Group B: Economic Factors * Region
+    GDP_per_capita * Region +
+    
+    # Group C: Death Demographics * Region
+    (Adult_mortality + Infant_deaths + Under_five_deaths) * Region +
+    
+    # Group D: Nutrition/Physical Status * Region
+    (BMI + Thinness_ten_nineteen_years + Thinness_five_nine_years + Alcohol_consumption) * Region,
+  
+  data = data
+)
+
+# View summary
+summary(lm_grouped)
+# Check multicollinearity (will still be high due to interactions)
+car::vif(lm_grouped)
+
+
+group_models <- list(
+  "Disease" = lm(Life_expectancy ~ (Hepatitis_B + Measles + Polio + Diphtheria + Incidents_HIV) * Region, data = data),
+  "Economic" = lm(Life_expectancy ~ (GDP_per_capita) * Region, data = data),
+  "Mortality" = lm(Life_expectancy ~ (Adult_mortality + Infant_deaths + Under_five_deaths) * Region, data = data),
+  "Nutrition" = lm(Life_expectancy ~ (BMI + Thinness_ten_nineteen_years + Thinness_five_nine_years + Alcohol_consumption) * Region, data = data)
+)
+
+# Compare R-squared
+map_dfr(group_models, ~ glance(.x), .id = "Group") %>%
+  select(Group, r.squared)
+
+
+
+# Center predictors: BMI, Alcohol, GDP:
+data <- data %>% 
+  mutate(
+    Alcohol_consumption_c = Alcohol_consumption - mean(Alcohol_consumption, na.rm = TRUE),
+    BMI_c = BMI - mean(BMI, na.rm = TRUE),
+    GDP_c = GDP_per_capita - mean(GDP_per_capita, na.rm = TRUE)
+  )
+
+
+
+
+car::vif(group_models) # high multi-collinearity
+
+
+# Group A - Disease Incidence: Hepatitis B, Measles, Polio, Diptheria, HIV/AIDS, 
+# Group B - Economic Factors: GDP_per_capita
+# Group C - Death Demographic Factors: Adult Mortality, Infant Mortality, Childrem deaths under five
+# Group D - Nutrition and Physical Status: BMI, Thinness_ten_nineteen_years, Thinness_five_nine_years, Alcohol_consumption 
+
+# Check multicollinearity for all models
+library(car)
+vif_results <- lapply(group_models, vif)  # Standard VIF
+print(vif_results)
+
+# Alternative (better for interactions)
+vif_results_alt <- lapply(group_models, function(model) vif(model, type = "predictor"))
+print(vif_results_alt)
+
+# User-friendly version (performance package)
+library(performance)
+collinearity_checks <- lapply(group_models, check_collinearity)
+print(collinearity_checks)
+
+
+```
+# Full Model
+## Model Reduction
+
+After cleaning the data, we are left with 15 explanatory variables for life expectancy, being Infant deaths, Under-five deaths, Adult mortality, Alcohol consumption, Hepatitis B, Measles, BMI, Polio, Diphtheria, Incidents of HIV, GDP per capita, Population (in millions), Thinness (ages 10–19 years), Thinness (ages 5–9 years), and Schooling.
+
+```{r}
+# load data
+data <- read.csv("Life-Expectancy-Data-Updated.csv")
+
+# fit initial model
+model <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Under_five_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Polio +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling,
+            data = data
+)
+
+summary(model)
+
+```
+
+After fitting the full model, we have 9 highly statistically significant variables (Infant_deaths, Under_five_deaths, Adult_mortality, Alcohol_consumption, Hepatitis_B, BMI, Incidents_HIV, GDP_per_capita, and Schooling). We have an overall p-value or 2.2e-16 Additionally, our R-squared is 0.9789 and Adjusted R-squared is 0.9788. This indicates that there might be overfitting issues within our model Next, we look at the variance inflation factors of each regressor variable to determine if there are any multicollinearity issues.
+
+```{r}
+library(car)
+vif(model)
+```
+
+Multicollinearity issues, that is variables with a vif greater than 10 arise within the regressors Infant_deaths (44.329144), Under_five_deaths (44.469991), Polio (11.990081), Diphtheria (12.940367). Additionally, Thinness_ten_nineteen_years (8.949993) and Thinness_five_nine_years (8.936053) also have rather high vif's, but still bellow 10.
+
+To combat this we will begin by removing Under_five_deaths.
+```{r}
+model1 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Polio +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling,
+            data = data
+)
+
+summary(model1)
+
+vif(model1)
+```
+
+After removing Under_five_deaths, we have the same highly statistically predictors, as well as Thinness_ten_nineteen_years being a somewhat significant predictor. Furthermore, The vif for Infant_deaths have improved. We still have a multicollinearity issue with Polio and Diphtheria, so it is in our best interest to remove one of them. We will remove polio because it has the highest p-value (0.8059) while having a large vif.
+```{r}
+
+model2 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling,
+            data = data
+)
+
+summary(model2)
+
+vif(model2)
+
+```
+
+Another solution to this could possibly combining all of the vaccine percentage variables, Hepatitis_B, Measles, Polio, and Diphtheria, into one variable, Vaccine_percentage
+
+
+```{r}
+data$Vaccine_percentage <- rowMeans(data[, c("Hepatitis_B", "Measles", "Polio", "Diphtheria")], na.rm = TRUE)
+
+model3 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              BMI +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling +
+              Vaccine_percentage,
+            data = data
+)
+
+summary(model3)
+
+vif(model3)
+
+```
+
+There does not seem to be a significant difference between these two models. If we chose to go with removing polio, we would have to remove each of the vaccines other than Diphteria as it is the only one that was statistically significant. This is likely because the vaccination somewhat consistent on each vaccine, if they had one they are likely to have the others.
+
+Moving forward with removing Polio, our next highest p-value is measles, so we will remove that.
+
+```{r}
+
+model4 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling,
+            data = data
+)
+
+summary(model4)
+
+vif(model4)
+
+```
+Running the new model, we can see both Diphtheria and Hepatitis_B are highly significant predictors so it is preferable to use this model rather than the average, Vaccine_percentage. The next highest p-value is Population_mlm, so we will move forward with removing that. This makes sense to not be a significatn predictor of life expectancy because there are plenty of high quality of life areas with low populations, low quality of life areas with high populations, and everything in between.
+
+```{r}
+
+model5 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Thinness_five_nine_years +
+              Schooling,
+            data = data
+)
+
+summary(model5)
+
+vif(model5)
+
+```
+
+Thinness_five_nine_years has the next highest p-value as well as rather high vif along with Thinness_ten_nineteen_years, so it makes sense to remove Thinness_five_nine_years.
+
+```{r}
+model6 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+summary(model6)
+
+vif(model6)
+
+
+```
+After this, all of the predictors are highly statistically significant. We still have a very high R-squared value of 0.9775. To combat this I think it may be a good idea to only have either Infant_deaths or adult mortality, as they both measure their respective deaths per 1000 in the population.
+
+```{r}
+model7 <- lm(Life_expectancy ~ 
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+summary(model7)
+
+vif(model7)
+
+```
+After removing Infant_deaths, we still have a high R-squared of 0.9591. Now we will try removing Adult_mortality and keeping Infant_deaths.
+
+```{r}
+model8 <- lm(Life_expectancy ~ 
+              Infant_deaths +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+summary(model8)
+
+vif(model8)
+
+```
+
+Once again, the R-Squared is still very high, with a value of 0.9263. I think the effort of trying to figure this out is not worth it, we will keep both variables and use model6. We opted for this model as it strikes a balance between high explanatory power and acceptable multicollinearity
+
+## Residual Analysis
+
+```{r}
+
+library(MASS)
+
+# residuals vs fitted values
+plot(fitted(model6), studres(model6),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(model6)
+
+# histogram of residuals
+hist(studres(model6), breaks = 15, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+```
+
+The QQ plot values are very close to the line which is good. The histogram of the residuals also appears to follow a normal distribution. However, the Residuals vs. Fitted value plot indicates a transformation is needed.
+
+## Assessment of model fit
+
+Before we perform any transformations, we want to ensure that we have the best possible model fit. We can do this by using the ols_step_all_possible, ols_step_forward_p, and ols_step_backward_p to see if those results match up with ours. Truth be told, we did not realize those functions existed before we began reducing the model manually.
+
+```{r}
+# find all possible permutations of the full model (this is commented out because it took so long, it is saved as a csv file now)
+# MS_ALL = ols_step_all_possible(model)
+# write.csv(MS_ALL$result, "MS_ALL_results.csv", row.names = FALSE)
+MS_ALL <- read.csv("MS_ALL_results.csv")
+
+library(dplyr)
+library(olsrr)
+
+# find model with highest adjusted r squared
+# adjr <- MS_ALL$result$adjr
+# max_adjr <- which.max(adjr)
+# best_model_adjr <- MS_ALL$result[max_adjr, ]
+#  (commenting out original code and using new working with loaded data frame)
+
+adjr <- MS_ALL$adjr
+max_adjr <- which.max(adjr)
+best_model_adjr <- MS_ALL[max_adjr, ]
+
+best_model_adjr$predictors
+
+# find model with lowest AIC
+# aic <- MS_ALL$result$aic
+# min_aic <- which.min(aic)
+# best_model_aic <- MS_ALL$result[min_aic, ]
+
+aic <- MS_ALL$aic
+min_aic <- which.min(aic)
+best_model_aic <- MS_ALL[min_aic, ]
+
+best_model_aic$predictors
+
+# find model with lowest BIC
+# bic <- MS_ALL$result$sbic
+# min_bic <- which.min(bic)
+
+bic <- MS_ALL$sbic
+min_bic <- which.min(bic)
+min_bic == min_aic
+# note: did not run best model because the best bic has the same model as the best aic
+
+# stepwise selection with p-values
+ols_stepwise_forward <- ols_step_forward_p(model)
+ols_stepwise_forward$metrics$variable
+
+ols_stepwise_backward <- ols_step_backward_p(model)
+ols_stepwise_backward$metrics$variable
+
+# fit the best models that we found
+adjr_model <- lm(Life_expectancy ~ Infant_deaths+Under_five_deaths+Adult_mortality+Alcohol_consumption+Hepatitis_B+BMI+Diphtheria+Incidents_HIV+GDP_per_capita+Thinness_ten_nineteen_years+Schooling, data = data)
+summary(adjr_model)
+vif(adjr_model)
+
+adjr_model1 <- lm(Life_expectancy ~ Infant_deaths+Adult_mortality+Alcohol_consumption+Hepatitis_B+BMI+Diphtheria+Incidents_HIV+GDP_per_capita+Thinness_ten_nineteen_years+Schooling, data = data)
+summary(adjr_model1)
+
+aic_bic_model <- lm(Life_expectancy ~ Infant_deaths+Under_five_deaths+Adult_mortality+Alcohol_consumption+Hepatitis_B+BMI+Incidents_HIV+GDP_per_capita+Thinness_ten_nineteen_years+Schooling, data = data)
+summary(aic_bic_model)
+vif(aic_bic_model)
+
+aic_bic_model1 <- lm(Life_expectancy ~ Infant_deaths+Adult_mortality+Alcohol_consumption+Hepatitis_B+BMI+Incidents_HIV+GDP_per_capita+Thinness_ten_nineteen_years+Schooling, data = data)
+summary(aic_bic_model1)
+vif(aic_bic_model1)
+
+backward_model <- lm(Life_expectancy ~ Thinness_five_nine_years+Polio+Measles+Population_mln, data = data)
+summary(backward_model)
+```
+
+The models that the functions from the olsrr library provided were quite similar our model6. It is important to note that these functions do not check for multicollinearity issues. 
+
+The model based on the highest adjusted R-squared value had predictors Infant_deaths, Under_five_deaths, Adult_mortality, Alcohol_consumption, Hepatitis_B, BMI, Diphtheria, Incidents_HIV, GDP_per_capita, Thinness_ten_nineteen_years, and Schooling. When looking at the vif's we can see Infant_deaths and Under_five_deaths are highly correlated, so it makes sense to remove Under_five_deaths as it has the higher vif. After doing so we can see that adjr_model1 is the exact same model as our main model, model6.
+
+The model based on the lowest AIC and BIC values (remember they are the same model) had predictors Infant_deaths, Under_five_deaths, Adult_mortality, Alcohol_consumption, Hepatitis_B, BMI, Incidents_HIV, GDP_per_capita, Thinness_ten_nineteen_years, and Schooling. Notice that this contains the same exact values as adj_model other than the fact that it omits Diphtheria. After removing Under_five_deaths once more due to multicollinearity, we are left with the final model based on the AIC/BIC values, aic_bic_model1. Simillarly to our other models, this model's adjusted R-squared was 0.9773
+
+The model obtained by the forward stepwise method had the same predictors as the adjr_model, meaning after cleaning it will be the same model as our main model, model6.
+
+The model obtained by the backward stepwise method was the most different out of every model and had predictors Thinness_five_nine_years, Polio, Measles, and Population_mln. Interestingly enough, these are all variables that were removed from other models. This was the worst fit model, with an adjusted R-squared of 0.5167.
+
+Taking all of this into consideration, the best choice of action is likely to go with aic_bic_model1, as the change caused by Diphtheria was rather insignificant.
+
+## Transformations
+
+```{r}
+
+# fit model taking log(Life_expectancy)
+
+log_aic_bic_model1 <- lm(log(Life_expectancy) ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+summary(log_aic_bic_model1)
+
+```
+
+## WAIT 
+
+By including the predictors that relate directly to death we have essentially just found that when less adults/babies die, the life expectancy is longer. WOW!!! This is not exactly the information we wanted to capture, it is a pretty obvious assumption, so it makes sense to try to refit the model with out it. So yes, everything up til now was all in vain. 
+
+## New Residual Analysis
+
+```{r}
+
+# residuals vs fitted values
+plot(fitted(new_model2), studres(new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(new_model2)
+
+# histogram of residuals
+hist(studres(new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# cook's distance
+
+cooks_d <- cooks.distance(new_model2)
+plot(cooks_d)
+
+# remove influential points flagged by cook's distance
+
+n <- nrow(data)
+
+influential_point <- which(cooks_d > (4 / n))
+
+cleaned_data <- data[-influential_point,]
+
+cleaned_new_model2 <- lm(Life_expectancy ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(cleaned_new_model2)
+
+cleaned_cooks_d <- cooks.distance(cleaned_new_model2)
+plot(cleaned_cooks_d)
+
+library(car)
+library(MASS)
+
+# residuals vs fitted values
+plot(fitted(cleaned_new_model2), studres(cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+```
+
+## New Transformations
+
+```{r}
+
+# log transformation
+
+log_cleaned_new_model2 <- lm(log(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(log_cleaned_new_model2)
+
+
+# residuals vs fitted values
+plot(fitted(log_cleaned_new_model2), studres(log_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(log_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(log_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# square root transformation
+
+sqrt_cleaned_new_model2 <- lm(sqrt(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(log_cleaned_new_model2)
+
+
+# residuals vs fitted values
+plot(fitted(sqrt_cleaned_new_model2), studres(sqrt_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(sqrt_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(sqrt_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# box-cox transformation
+
+boxcox_result <- boxcox(cleaned_new_model2)
+lambda <- boxcox_result$x[which.max(boxcox_result$y)]
+
+boxcox1_cleaned_new_model2 <- lm((Life_expectancy ^ lambda)  ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(boxcox1_cleaned_new_model2)
+
+# residuals vs fitted values
+plot(fitted(boxcox1_cleaned_new_model2), studres(boxcox1_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(boxcox1_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(boxcox1_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+boxcox2_cleaned_new_model2 <- lm((((Life_expectancy ^ lambda) - 1) / 2)   ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln ++
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = cleaned_data
+)
+
+summary(boxcox2_cleaned_new_model2)
+
+# residuals vs fitted values
+plot(fitted(boxcox2_cleaned_new_model2), studres(boxcox2_cleaned_new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(boxcox2_cleaned_new_model2)
+
+# histogram of residuals
+hist(studres(boxcox2_cleaned_new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+```
+
+Now that we have transformed variables, we will compare their AIC values to determine which is best.
+
+```{r}
+
+AIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
+BIC(cleaned_new_model2, log_cleaned_new_model2, sqrt_cleaned_new_model2, boxcox1_cleaned_new_model2, boxcox2_cleaned_new_model2)
+
+
+
+```
+
+The log transformation has the lowest AIC and BIC values, indicating that it is the best model out of the original and these transformations. The tails of the QQ plot are not as good as the original mode but we think this is a valid trade off for the better AIC/BIC values.
+
+## Final look at models
+
+After discussing with group members, we decided to not remove influential points so our final models will be model6 and new_model2
+
+```{r}
+log_model6 <- lm(log(Life_expectancy) ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+sqrt_model6 <- lm(sqrt(Life_expectancy) ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+squared_model6 <- lm((Life_expectancy) ^ 2 ~ 
+              Infant_deaths +
+              Adult_mortality +
+              Alcohol_consumption +
+              Hepatitis_B +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Thinness_ten_nineteen_years +
+              Schooling,
+            data = data
+)
+
+log_new_model2 <- lm(log(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+sqrt_new_model2 <- lm(sqrt(Life_expectancy) ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+squared_new_model2 <- lm((Life_expectancy) ^ 2 ~ 
+              Alcohol_consumption +
+              Hepatitis_B +
+              Measles +
+              BMI +
+              Diphtheria +
+              Incidents_HIV +
+              GDP_per_capita +
+              Population_mln +
+              Thinness_five_nine_years +
+              Schooling +
+              Economy_status_Developed,
+            data = data
+)
+
+AIC(model6, log_model6, sqrt_model6, squared_model6, new_model2, log_new_model2, sqrt_new_model2, squared_new_model2)
+
+BIC(model6, log_model6, sqrt_model6, squared_model6, new_model2, log_new_model2, sqrt_new_model2, squared_new_model2)
+
+# residuals vs fitted values
+plot(fitted(model6), studres(model6),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(model6)
+
+# histogram of residuals
+hist(studres(model6), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# Residuals vs Fitted Values (Log Original Model)
+plot(fitted(log_model6), studres(log_model6),
+     main = "Residuals vs Fitted (Log Original Model)",
+     xlab = "Fitted Values", ylab = "Studentized Residuals (Log Model)")
+abline(h = 0, col = "red")
+
+# QQ Plot (Log Original Model)
+qqPlot(log_model6, 
+       main = "QQ Plot of Residuals (Log Original Model)")
+
+# Histogram of Residuals (Log Original Model)
+hist(studres(log_model6), breaks = 10, freq = FALSE, col = "cornflowerblue",
+     xlab = "Studentized Residuals", 
+     main = "Histogram of Residuals (Log Original Model)")
+
+
+
+# residuals vs fitted values
+plot(fitted(new_model2), studres(new_model2),
+     main="Residuals vs Fitted",
+     xlab="Fitted Values", ylab="Residuals")
+abline(h = 0, col = "red")
+
+# QQ plot
+qqPlot(new_model2)
+
+# histogram of residuals
+hist(studres(new_model2), breaks = 10, freq = F, col="cornflowerblue",
+     xlab = "Studentized Residuals")
+
+# Residuals vs Fitted Values Plot
+plot(fitted(log_new_model2), studres(log_new_model2),
+     main = "Residuals vs Fitted (Log Adjusted Model)",
+     xlab = "Fitted Values", ylab = "Studentized Residuals (Log Model)")
+abline(h = 0, col = "red")
+
+# QQ Plot
+qqPlot(log_new_model2, 
+       main = "QQ Plot of Residuals (Log Adjusted Model)")
+
+# Histogram of Residuals
+hist(studres(log_new_model2), breaks = 10, freq = FALSE, col = "cornflowerblue",
+     xlab = "Studentized Residuals", 
+     main = "Histogram of Residuals (Log Adjusted Model)")
+
+
+summary(log_model6)
+summary(log_new_model2)
+```
+
+
+# Heatmaps
+## ```{r}
+## # Ensure required packages are loaded
+## library(ggplot2)
+## library(dplyr)
+## library(sf)
+## library(rnaturalearth)
+## library(rnaturalearthdata)
+
+## # Load dataset (if not already loaded)
+## data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+
+## # Load world map
+## world <- ne_countries(scale = "medium", returnclass = "sf")
+
+## # Merge world map with your dataset by country name
+## world_data <- world %>%
+##   left_join(data, by = c("name" = "Country"))
+
+## # Heatmap 1: Life Expectancy
+## ggplot(world_data) +
+##   geom_sf(aes(fill = Life_expectancy)) +
+##   scale_fill_viridis_c(option = "plasma", na.value = "lightgrey") +
+##   labs(title = "Life Expectancy by Country", fill = "Life Expectancy") +
+##   theme_minimal()
+
+## ```
+
+
+```{r rworldmap-all-fixed, fig.height=5, fig.width=8}
+library(rworldmap)
+library(RColorBrewer)
+
+# Load dataset
+data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+joinedData <- joinCountryData2Map(data, joinCode = "NAME", nameJoinColumn = "Country")
+
+# 1. Life Expectancy – Blue
+mapCountryData(joinedData,
+               nameColumnToPlot = "Life_expectancy",
+               mapTitle = "Life Expectancy by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Blues"))(100))
+
+# 2. GDP per Capita – Green
+mapCountryData(joinedData,
+               nameColumnToPlot = "GDP_per_capita",
+               mapTitle = "GDP per Capita by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Greens"))(100))
+
+# 3. Alcohol Consumption – Pinkish (RdPu)
+mapCountryData(joinedData,
+               nameColumnToPlot = "Alcohol_consumption",
+               mapTitle = "Alcohol Consumption by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "RdPu"))(100))
+
+# 4. Measles – Purple
+mapCountryData(joinedData,
+               nameColumnToPlot = "Measles",
+               mapTitle = "Measles Cases by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Purples"))(100))
+
+# 5. Adult Mortality – Red
+mapCountryData(joinedData,
+               nameColumnToPlot = "Adult_mortality",
+               mapTitle = "Adult Mortality by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Reds"))(100))
+
+# 6. BMI – Lighter Yellow-Orange (YlOrBr)
+mapCountryData(joinedData,
+               nameColumnToPlot = "BMI",
+               mapTitle = "BMI by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "RdBu"))(100))
+
+
+```
