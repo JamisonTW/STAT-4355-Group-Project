@@ -1,0 +1,82 @@
+---
+title: "more heatmaps"
+output: pdf_document
+date: "2025-05-03"
+---
+
+
+# ```{r}
+# # Ensure required packages are loaded
+# library(ggplot2)
+# library(dplyr)
+# library(sf)
+# library(rnaturalearth)
+# library(rnaturalearthdata)
+#
+# # Load dataset (if not already loaded)
+# data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+#
+# # Load world map
+# world <- ne_countries(scale = "medium", returnclass = "sf")
+#
+# # Merge world map with your dataset by country name
+# world_data <- world %>%
+#   left_join(data, by = c("name" = "Country"))
+#
+# # Heatmap 1: Life Expectancy
+# ggplot(world_data) +
+#   geom_sf(aes(fill = Life_expectancy)) +
+#   scale_fill_viridis_c(option = "plasma", na.value = "lightgrey") +
+#   labs(title = "Life Expectancy by Country", fill = "Life Expectancy") +
+#   theme_minimal()
+#
+# ```
+
+
+```{r rworldmap-all-fixed, fig.height=5, fig.width=8}
+library(rworldmap)
+library(RColorBrewer)
+
+# Load dataset
+data <- read.csv('/Users/dhanish/College/Spring 25/Linear Models/4355 Project/Life-Expectancy-Data-Updated.csv')
+joinedData <- joinCountryData2Map(data, joinCode = "NAME", nameJoinColumn = "Country")
+
+# 1. Life Expectancy – Blue
+mapCountryData(joinedData,
+               nameColumnToPlot = "Life_expectancy",
+               mapTitle = "Life Expectancy by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Blues"))(100))
+
+# 2. GDP per Capita – Green
+mapCountryData(joinedData,
+               nameColumnToPlot = "GDP_per_capita",
+               mapTitle = "GDP per Capita by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Greens"))(100))
+
+# 3. Alcohol Consumption – Pinkish (RdPu)
+mapCountryData(joinedData,
+               nameColumnToPlot = "Alcohol_consumption",
+               mapTitle = "Alcohol Consumption by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "RdPu"))(100))
+
+# 4. Measles – Purple
+mapCountryData(joinedData,
+               nameColumnToPlot = "Measles",
+               mapTitle = "Measles Cases by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Purples"))(100))
+
+# 5. Adult Mortality – Red
+mapCountryData(joinedData,
+               nameColumnToPlot = "Adult_mortality",
+               mapTitle = "Adult Mortality by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "Reds"))(100))
+
+# 6. BMI – Lighter Yellow-Orange (YlOrBr)
+mapCountryData(joinedData,
+               nameColumnToPlot = "BMI",
+               mapTitle = "BMI by Country",
+               colourPalette = colorRampPalette(brewer.pal(9, "RdBu"))(100))
+
+
+```
+
